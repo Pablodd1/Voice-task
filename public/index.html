@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LunaBill | AI-Powered Medical Billing Automation</title>
+    <meta name="description" content="LunaBill reduces Days in AR using AI voice agents that call payers, reprocess claims, escalate appeals, and integrate with your EHR. HIPAA-certified and audit-ready.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><span class="logo-icon">🌙</span> LunaBill</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact" class="btn-nav">Book a Demo</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-text">Backed by Industry Leaders</span>
+                </div>
+                <h1>Automate Your Medical Billing Calls. <span class="highlight">Get paid Faster.</span></h1>
+                <p class="hero-subtitle">LunaBill AI Voice Agents handle tedious insurance calls for:</p>
+                <ul class="hero-benefits">
+                    <li><span class="check-icon">✓</span> Claim Status Inquiries</li>
+                    <li><span class="check-icon">✓</span> A/R Recovery</li>
+                    <li><span class="check-icon">✓</span> Appeal Follow-up</li>
+                </ul>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn-primary">Book an Appointment</a>
+                    <button class="btn-secondary" id="play-demo-btn">
+                        <span class="play-icon">▶</span> Listen to our AI
+                    </button>
+                </div>
+                <div class="audio-player" id="audio-player" style="display: none;">
+                    <div class="audio-controls">
+                        <button class="audio-play-btn" id="audio-play">▶</button>
+                        <div class="audio-progress">
+                            <div class="audio-progress-bar" id="audio-progress-bar"></div>
+                        </div>
+                        <span class="audio-time">0:00 / 2:30</span>
+                    </div>
+                    <p class="audio-label">Sample AI Voice Agent Call</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="trust-indicators">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <div class="trust-icon">🏆</div>
+                    <h3>#1 AI Claim Caller</h3>
+                    <p>Best in class performance</p>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">🔒</div>
+                    <h3>HIPAA Certified</h3>
+                    <p>Enterprise-grade security</p>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">📊</div>
+                    <h3>Audit Ready</h3>
+                    <p>Complete call documentation</p>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">⚡</div>
+                    <h3>Setup in Minutes</h3>
+                    <p>No workflow changes needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Luna is the best AI claim caller in the real world</h2>
+                <p>Our AI voice agents navigate complex insurance systems with precision and efficiency</p>
+            </div>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="20" fill="#E8F4FD"/>
+                            <path d="M16 24L22 30L32 18" stroke="#4A6FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Auto IVR Navigation</h3>
+                    <p>LunaBill skips menus and reaches the right department faster than a human. No more waiting on hold or navigating complex phone trees.</p>
+                    <ul class="feature-list">
+                        <li>Instant menu recognition</li>
+                        <li>Smart routing to correct department</li>
+                        <li>24/7 availability</li>
+                    </ul>
+                </div>
+                <div class="feature-card featured">
+                    <div class="featured-badge">Most Popular</div>
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="20" fill="#E8F4FD"/>
+                            <path d="M18 16H30M18 24H30M18 32H24" stroke="#4A6FA5" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Gathers Every Detail</h3>
+                    <p>From claim numbers to denial reasons, our AI asks smart follow-ups and even schedules the next call automatically.</p>
+                    <ul class="feature-list">
+                        <li>Comprehensive data extraction</li>
+                        <li>Smart follow-up questions</li>
+                        <li>Automatic next-call scheduling</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="20" fill="#E8F4FD"/>
+                            <path d="M16 24L22 30L32 18" stroke="#4A6FA5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Reprocess On the Spot</h3>
+                    <p>Our AI Voice can reprocess claims on call and escalate appeals when needed. Get paid faster with immediate action.</p>
+                    <ul class="feature-list">
+                        <li>Real-time claim reprocessing</li>
+                        <li>Automatic appeal escalation</li>
+                        <li>Instant status updates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results/Stats Section -->
+    <section class="results">
+        <div class="container">
+            <div class="section-header">
+                <h2>Results You Can Expect</h2>
+                <p>Real numbers from real practices using LunaBill</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="50000">0</div>
+                    <div class="stat-suffix">+</div>
+                    <p class="stat-label">Insurance calls automated monthly</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-prefix">$</div>
+                    <div class="stat-number" data-target="32">0</div>
+                    <div class="stat-suffix">M+</div>
+                    <p class="stat-label">Revenue recovered monthly</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="20">0</div>
+                    <div class="stat-suffix">K+</div>
+                    <p class="stat-label">Staffing hours reclaimed monthly</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="95">0</div>
+                    <div class="stat-suffix">%</div>
+                    <p class="stat-label">Customer satisfaction rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>Let's boost your AR calling</h2>
+                <p>No workflow changes required. Plug-and-play with any EHR or PM system.</p>
+            </div>
+            
+            <div class="workflow-grid">
+                <div class="workflow-card">
+                    <div class="workflow-icon">🔌</div>
+                    <h3>No Workflow Changes Required</h3>
+                    <p>Plug-and-play with any EHR or Practice Management system. LunaBill integrates seamlessly with your existing tools.</p>
+                </div>
+                <div class="workflow-card">
+                    <div class="workflow-icon">📞</div>
+                    <h3>24/7 AI Voice Agents</h3>
+                    <p>Talk to our team or review call summaries anytime. Our AI agents work around the clock to recover your revenue.</p>
+                </div>
+            </div>
+
+            <div class="steps-section">
+                <h3>How it works</h3>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Set Up in Minutes</h4>
+                        <p>Create your account and add your practice name, billing info, and payer details. No technical expertise required.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>Upload Claims</h4>
+                        <p>Submit a simple Excel or CSV export from your EHR/Practice Management Software. We handle the rest.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Watch the Automation</h4>
+                        <p>Track real-time call progress, outcomes, and resolved claims from your intuitive dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the plan that fits your practice</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">499</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="pricing-desc">Perfect for small practices</p>
+                    <ul class="pricing-features">
+                        <li>Up to 500 calls/month</li>
+                        <li>Basic claim tracking</li>
+                        <li>Email support</li>
+                        <li>Standard integrations</li>
+                    </ul>
+                    <a href="#contact" class="btn-outline">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="featured-badge">Most Popular</div>
+                    <h3>Professional</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">999</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="pricing-desc">Ideal for growing practices</p>
+                    <ul class="pricing-features">
+                        <li>Up to 2,000 calls/month</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority support</li>
+                        <li>All integrations</li>
+                        <li>Custom workflows</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">
+                        <span class="amount">Custom</span>
+                    </div>
+                    <p class="pricing-desc">For large organizations</p>
+                    <ul class="pricing-features">
+                        <li>Unlimited calls</li>
+                        <li>Dedicated account manager</li>
+                        <li>24/7 phone support</li>
+                        <li>Custom integrations</li>
+                        <li>White-label options</li>
+                        <li>SLA guarantees</li>
+                    </ul>
+                    <a href="#contact" class="btn-outline">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact/CTA Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Smart billing calls start here!</h2>
+                    <p>Ready to automate your AR calling? Book a demo today and see how LunaBill can transform your revenue cycle.</p>
+                    <div class="contact-badges">
+                        <div class="badge">
+                            <span class="badge-icon">🔒</span>
+                            <span>HIPAA-Certified</span>
+                        </div>
+                        <div class="badge">
+                            <span class="badge-icon">🛡️</span>
+                            <span>SOC 2 Compliant</span>
+                        </div>
+                        <div class="badge">
+                            <span class="badge-icon">🏢</span>
+                            <span>Enterprise Grade Security</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="demo-form">
+                        <h3>Book a Demo</h3>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="practice">Practice Name</label>
+                            <input type="text" id="practice" name="practice" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message (Optional)</label>
+                            <textarea id="message" name="message" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary btn-full">Book My Demo</button>
+                        <p class="form-note">We'll get back to you within 24 hours</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>LunaBill</h4>
+                    <p>Automating medical billing calls with AI voice agents. Recover revenue and reclaim staff hours.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">HIPAA Compliance</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 LunaBill. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

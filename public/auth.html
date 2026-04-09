@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LunaBill | Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-brand">
+                <h1><span class="logo-icon">🌙</span> LunaBill</h1>
+                <p>Automate Your Medical Billing Calls. Get paid Faster.</p>
+            </div>
+            <div class="auth-features">
+                <div class="auth-feature">
+                    <span class="check-icon">✓</span>
+                    <span>50,000+ insurance calls automated monthly</span>
+                </div>
+                <div class="auth-feature">
+                    <span class="check-icon">✓</span>
+                    <span>$32M+ revenue recovered monthly</span>
+                </div>
+                <div class="auth-feature">
+                    <span class="check-icon">✓</span>
+                    <span>HIPAA-Certified & SOC 2 Compliant</span>
+                </div>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-card">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form class="auth-form active" id="login-form">
+                    <h2>Welcome back</h2>
+                    <p class="auth-subtitle">Sign in to your LunaBill account</p>
+                    
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" name="email" required placeholder="you@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required placeholder="Enter your password">
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-full" id="login-btn">Sign In</button>
+                    
+                    <div class="auth-message" id="login-message"></div>
+                </form>
+                
+                <!-- Register Form -->
+                <form class="auth-form" id="register-form">
+                    <h2>Create account</h2>
+                    <p class="auth-subtitle">Start automating your billing calls today</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="register-firstName">First Name</label>
+                            <input type="text" id="register-firstName" name="firstName" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-lastName">Last Name</label>
+                            <input type="text" id="register-lastName" name="lastName" required placeholder="Doe">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" name="email" required placeholder="you@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-practice">Practice Name</label>
+                        <input type="text" id="register-practice" name="practiceName" placeholder="Your Medical Practice">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-phone">Phone (Optional)</label>
+                        <input type="tel" id="register-phone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required placeholder="Min 8 characters" minlength="8">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-confirmPassword">Confirm Password</label>
+                        <input type="password" id="register-confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    
+                    <label class="checkbox-label terms-label">
+                        <input type="checkbox" name="terms" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                    
+                    <button type="submit" class="btn-primary btn-full" id="register-btn">Create Account</button>
+                    
+                    <div class="auth-message" id="register-message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+</body>
+</html>
