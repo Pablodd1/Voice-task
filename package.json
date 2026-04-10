@@ -1,7 +1,7 @@
 {
-  "name": "lunabill",
+  "name": "voxcollect",
   "version": "1.0.0",
-  "description": "LunaBill - AI-Powered Medical Billing Automation Platform",
+  "description": "VoxCollect - AI-Powered Collections & Accounts Receivable Automation",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,13 +14,14 @@
     "node": ">=14.0.0"
   },
   "keywords": [
-    "medical-billing",
+    "collections",
+    "accounts-receivable",
     "ai-voice-agent",
     "healthcare",
     "automation",
-    "claims-management"
+    "debt-recovery"
   ],
-  "author": "LunaBill Team",
+  "author": "VoxCollect Team",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
