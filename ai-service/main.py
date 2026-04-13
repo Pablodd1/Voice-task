@@ -33,7 +33,7 @@ app.add_middleware(
 
 # MiniMax API configuration
 MINIMAX_API_KEY = os.getenv("MINIMAX_API_KEY", "")
-MINIMAX_API_BASE = "https://api.minimax.io"
+MINIMAX_API_BASE = "https://api.minimax.io"  # international platform
 MINIMAX_TTS_ENDPOINT = f"{MINIMAX_API_BASE}/v1/text_to_speech"
 MINIMAX_CHAT_ENDPOINT = f"{MINIMAX_API_BASE}/v1/text/chatcompletion_v2"
 
@@ -97,19 +97,11 @@ async def synthesize_speech(request: SynthesizeRequest):
         payload = {
             "model": "speech-02-hd",
             "text": request.text,
-            "stream": False,
-            "voice_setting": {
-                "voice_id": map_voice_id(request.voice),
-                "speed": request.speed,
-                "vol": 1.0,
-                "pitch": 0,
-                "emotion": "neutral"
-            },
-            "audio_setting": {
-                "sample_rate": 32000,
-                "bitrate": 128000,
-                "format": "mp3"
-            }
+            "voice_id": map_voice_id(request.voice),
+            "speed": request.speed,
+            "vol": 1.0,
+            "pitch": 0,
+            "emotion": "neutral"
         }
 
         response = requests.post(
@@ -126,6 +118,14 @@ async def synthesize_speech(request: SynthesizeRequest):
             )
 
         result = response.json()
+        
+        # Check for API error
+        base_resp = result.get("base_resp", {})
+        if base_resp.get("status_code") != 0:
+            raise HTTPException(
+                status_code=502,
+                detail=f"MiniMax TTS error: {base_resp.get('status_msg')} (code {base_resp.get('status_code')})"
+            )
         
         # MiniMax TTS returns base64-encoded audio
         audio_base64 = result.get("data", {}).get("audio", "")
