@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // Load environment variables
 dotenv.config();
@@ -17,6 +18,18 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// AI Service proxy — forward /api/ai/* to Python AI service
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+app.use('/api/ai', createProxyMiddleware({
+  target: AI_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: { '^/api/ai': '' },   // /api/ai/chat -> /chat
+  onError: (err, req, res) => {
+    console.error('AI Service proxy error:', err.message);
+    res.status(503).json({ error: 'AI service unavailable', detail: err.message });
+  }
+}));
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));

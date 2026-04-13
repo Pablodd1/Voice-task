@@ -1,106 +1,110 @@
-# 🚀 LUNABILL - DEPLOYMENT GUIDE
+# VoxCollect / LunaBill — Railway Deployment Guide
 
-## ✅ COMPLETED - ALL FILES READY
+## Architecture
 
-### Files Created for GitHub + Render Deployment:
-
-1. **`.gitignore`** - Excludes node_modules, .env, database files
-2. **`.env.example`** - Template for environment variables
-3. **`config/database.js`** - Dual database support (SQLite/PostgreSQL)
-4. **`models/User.js`** - Sequelize User model with bcrypt
-5. **`models/Claim.js`** - Sequelize Claim model
-6. **`models/Call.js`** - Sequelize Call model
-7. **`server.js`** - Updated with database initialization
-8. **`controllers/authController.js`** - Updated for Sequelize
-9. **`controllers/claimsController.js`** - Updated for Sequelize + CSV support
-10. **`scripts/seed.js`** - Updated for Sequelize
-11. **`Dockerfile`** - Docker deployment configuration
-12. **`README.md`** - Complete deployment guide
-
----
-
-## 🎯 NEXT STEPS TO DEPLOY:
-
-### Step 1: Create GitHub Repository
 ```
-1. Go to https://github.com/new
-2. Name: lunabill
-3. Create repository
-4. Push your code:
-   git remote add origin https://github.com/YOUR_USERNAME/lunabill.git
-   git push -u origin main
+Railway Service 1: Node.js Backend (Express) — Port 5000
+Railway Service 2: Python AI Service (FastAPI) — Port 5001  
+Railway Plugin: PostgreSQL Database
+Vercel (optional): Static frontend
+Twilio: Outbound voice calls
 ```
 
-### Step 2: Deploy to Render.com
-```
-1. Go to https://render.com
-2. Sign up with GitHub
-3. Click "New +" → "Web Service"
-4. Connect your GitHub repo
-5. Configure:
-   - Build Command: npm install
-   - Start Command: npm start
-6. Add Environment Variables:
-   NODE_ENV=production
-   JWT_SECRET=<generate_strong_string>
-   JWT_EXPIRES_IN=24h
-```
+## Step 1: Set Up Railway
 
-### Step 3: Create PostgreSQL Database
-```
-1. Click "New +" → "PostgreSQL"
-2. Name: lunabill-db
-3. Copy Internal Connection URL
-4. Add to Web Service:
-   DATABASE_URL=<connection_string>
-```
+1. Go to **railway.app** → Sign up with GitHub
+2. Click **New Project** → **Deploy from GitHub repo**
+3. Select `Pablodd1/Voice-task`
 
-### Step 4: Seed Database
+## Step 2: Add PostgreSQL Database
+
+1. In your Railway project → **Add Plugin** → **PostgreSQL**
+2. Copy the `DATABASE_URL` environment variable shown
+3. Add it to your service's variables (see Step 3)
+
+## Step 3: Environment Variables
+
+Add these in Railway → Service → Variables:
+
+**For Node.js Backend (Port 5000):**
 ```
-1. Click your Web Service → "Shell"
-2. Run: npm run seed
-3. Exit
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://postgres:XXX@YYY.railway.internal:5432/railway
+JWT_SECRET=<generate with: openssl rand -base64 32>
+JWT_EXPIRES_IN=24h
+AI_SERVICE_URL=http://python-ai-service:5001
 ```
 
----
+**For Python AI Service (Port 5001):**
+```
+PORT=5001
+MINIMAX_API_KEY=your_minimax_api_key_here
+NODE_ENV=production
+```
 
-## 🔑 TEST CREDENTIALS
-- **Email**: test@lunabill.com
-- **Password**: password123
+## Step 4: Set Start Command
 
----
+**Node.js Backend:**
+```
+npm start
+```
 
-## 📱 APPLICATION URLS (After Deployment)
-- **Landing**: https://your-app.onrender.com/
-- **Login**: https://your-app.onrender.com/login
-- **Dashboard**: https://your-app.onrender.com/dashboard
-- **Health**: https://your-app.onrender.com/health
+**Python AI Service:**
+```
+cd ai-service && pip install -r requirements.txt && python main.py
+```
+Or use the included Dockerfile in `ai-service/`
 
----
+## Step 5: Twilio Setup (for voice calls)
 
-## 📊 KEY VARIABLES NEEDED
+1. Create account at **twilio.com** (pay-as-you-go)
+2. Get your **Account SID** and **Auth Token** from Twilio Console
+3. Buy a phone number ($1/month)
+4. Add to Railway environment variables:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `JWT_SECRET` | Auth encryption key | Generate with: `openssl rand -base64 32` |
-| `DATABASE_URL` | PostgreSQL connection | From Render dashboard |
-| `NODE_ENV` | Environment | `production` |
-| `PORT` | Server port | `10000` (Render assigns) |
+```
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_NUMBER=+1234567890
+```
 
----
+## Step 6: Update Voice-task Code
 
-## 🎉 DEPLOYMENT COMPLETE - READY FOR SALE!
+The telephony service (`telephony-service/`) currently runs in demo mode. 
+To connect real Twilio, update it to use the Twilio Node.js SDK:
 
-The application is fully functional with:
-✅ User authentication (JWT + bcrypt)
-✅ Claims CRUD (Create, Read, Update, Delete)
-✅ AI Call simulation (demo mode)
-✅ CSV/Excel file upload
-✅ Real-time dashboard analytics
-✅ PostgreSQL production database
-✅ Docker support
-✅ Environment-based configuration
-✅ Health check endpoints
-✅ Responsive mobile design
+```bash
+npm install twilio
+```
 
-To sell: Generate ROI calculators, create demo videos, prepare HIPAA compliance documentation (for full healthcare compliance, add BAAs and security audits).
+Then in `telephony-service/index.js`, replace the demo code with:
+```javascript
+const twilio = require('twilio');
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
+
+// Make outbound call
+await client.calls.create({
+  to: to_number,
+  from: process.env.TWILIO_PHONE_NUMBER,
+  url: 'http://your-railway-app.railway.app/twiml/' + call_id
+});
+```
+
+## Quick Start Commands
+
+```bash
+# Generate JWT secret
+openssl rand -base64 32
+
+# Test API locally
+curl http://localhost:5000/health
+
+# Test AI service locally  
+curl -X POST http://localhost:5001/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "hello", "context": {}}'
+```

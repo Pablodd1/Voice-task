@@ -1,19 +1,15 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci --only=production
 
-# Copy all files
 COPY . .
 
-# Create uploads directory
-RUN mkdir -p uploads
+EXPOSE 5000
 
-# Expose port
-EXPOSE 10000
+ENV NODE_ENV=production
+ENV PORT=5000
 
-# Start the application
 CMD ["npm", "start"]
