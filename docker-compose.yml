@@ -1,58 +1,84 @@
-# VoxCollect Full Stack Docker Compose
+# VoxCollect / LunaBill — Railway Multi-Service Deployment
+#
+# Railway deploys each service defined here as a separate service.
+# Networking between services is handled automatically via container names.
+#
+# Usage:
+#   1. railway up         (from repo root — Railway auto-detects this file)
+#   2. Or: Connect repo in Railway dashboard, Railway auto-parses this file
+#
+# Each service gets its own URL. Railway auto-sets DATABASE_URL for PostgreSQL.
 
 version: '3.8'
 
 services:
-  # Main VoxCollect App
-  app:
-    build: .
+  # =========================================
+  # Node.js Backend (Express) — Main API
+  # =========================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
-      - NODE_ENV=development
-      - JWT_SECRET=dev_secret_change_in_production
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/voxcollect
+      - NODE_ENV=production
+      - PORT=5000
+      - DATABASE_URL=${DATABASE_URL:}  # Set by Railway PostgreSQL plugin
+      - JWT_SECRET=${JWT_SECRET:}
+      - JWT_EXPIRES_IN=24h
+      - AI_SERVICE_URL=http://ai-service:5001
     depends_on:
-      - db
-    volumes:
-      - ./uploads:/app/uploads
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
 
-  # PostgreSQL Database
-  db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=voxcollect
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  # AI Service (Python FastAPI)
+  # =========================================
+  # Python AI Service (FastAPI) — TTS + Chat
+  # =========================================
   ai-service:
-    build: 
+    build:
       context: ./ai-service
       dockerfile: Dockerfile
     ports:
       - "5001:5001"
     environment:
-      - MODEL_PATH=/models
-    volumes:
-      - ./ai-service/models:/models
+      - PORT=5001
+      - MINIMAX_API_KEY=${MINIMAX_API_KEY:}
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
 
-  # FreeSWITCH (Telephony) - Optional
-  # freeswitch:
-  #   image: voxcollect/freeswitch:latest
-  #   ports:
-  #     - "5060:5060"
-  #     - "5061:5061"
-  #   environment:
-  #     - FS_PASSWORD=voxcollect
+  # =========================================
+  # PostgreSQL Database — via Railway plugin
+  # (Railway provides this via their plugin system,
+  # so we reference it here for docker-compose local dev)
+  # =========================================
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_DB=${POSTGRES_DB:-voxcollect}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
 
 volumes:
   postgres_data:
-
-networks:
-  default:
-    name: voxcollect-network
