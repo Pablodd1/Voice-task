@@ -1,36 +1,55 @@
 # VoxCollect - Open Source Upgrade Plan
 
 ## Current Status
-- ✅ Core app deployed on Render
-- ⚠️ Build issues fixed (npm install vs npm ci)
+- ✅ Core app on Render
+- ✅ Telephony service (FreeSWITCH ready)
+- ✅ AI microservice (Whisper + Coqui TTS + LLM)
+- ✅ Docker Compose setup
 
-## Recommended Free/Open Source Upgrades
+## What's Added
 
-### 1. Telephony (FreeSWITCH)
-- Replace simulation with real calls
-- Open source PBX system
-- ESL API for Node integration
+### 1. AI Service (`/ai-service`)
+- `/transcribe` - Audio to text (Whisper)
+- `/synthesize` - Text to speech (Coqui TTS)
+- `/chat` - LLM conversation
+- `/parse` - NLP extraction
 
-### 2. AI Voice Stack
-- **STT**: Whisper (OpenAI open-source)
-- **TTS**: Coqui TTS
-- **NLP**: spaCy
+### 2. Telephony Service (`/telephony-service`)
+- `/start-call` - Start outbound call
+- `/call/:id` - Get call status
+- `/end-call` - End call
+- FreeSWITCH ESL ready
 
-### 3. Local LLM
-- Llama.cpp with 3B-7B models
-- GPT-NeoX variants
+### 3. Docker Compose
+- Main app (Node.js)
+- PostgreSQL
+- AI Service (Python)
+- FreeSWITCH (optional)
 
-### 4. Docker Compose
-- Run all services locally
-- Easy development
+## Running Locally
 
-## Next Steps
-1. Fix Render build
-2. Add telephony service
-3. Add AI microservice
+```bash
+# Full stack
+docker-compose up
+
+# Just AI service
+cd ai-service
+pip install -r requirements.txt
+python main.py
+```
 
 ## Tech Stack
 - Node.js + Express
 - PostgreSQL
+- Python FastAPI
 - FreeSWITCH
-- Python (AI services)
+- Whisper + Coqui TTS + Llama.cpp
+- spaCy
+
+## Production Deployment
+1. Deploy core app to Render
+2. Deploy AI service separately (Render Python)
+3. Deploy FreeSWITCH on cloud server or use Twilio
+
+## License
+MIT

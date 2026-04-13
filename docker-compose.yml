@@ -1,0 +1,58 @@
+# VoxCollect Full Stack Docker Compose
+
+version: '3.8'
+
+services:
+  # Main VoxCollect App
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=dev_secret_change_in_production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/voxcollect
+    depends_on:
+      - db
+    volumes:
+      - ./uploads:/app/uploads
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=voxcollect
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # AI Service (Python FastAPI)
+  ai-service:
+    build: 
+      context: ./ai-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - MODEL_PATH=/models
+    volumes:
+      - ./ai-service/models:/models
+
+  # FreeSWITCH (Telephony) - Optional
+  # freeswitch:
+  #   image: voxcollect/freeswitch:latest
+  #   ports:
+  #     - "5060:5060"
+  #     - "5061:5061"
+  #   environment:
+  #     - FS_PASSWORD=voxcollect
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: voxcollect-network
