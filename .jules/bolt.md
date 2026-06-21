@@ -1,0 +1,5 @@
+## 2024-05-24 - Database Aggregations with Sequelize and SQL dialects
+
+**Learning:** When using database-level aggregations in Sequelize (like `SUM` or `COUNT` with `raw: true`), different SQL dialects (like PostgreSQL vs SQLite) handle types differently. Aggregations may return numeric strings to prevent precision loss, and empty query matches may return a single row with `null` values or a completely `null` object depending on the specific aggregation structure. Additionally, when using `.col` or `.literal` string inputs within `.attributes`, we must use the actual underlying database column name (e.g., `billed_amount`), not the Sequelize model mapped name (e.g., `billedAmount`), or we will trigger SQL column missing errors.
+
+**Action:** Always provide object fallbacks (`const stats = await Model.findOne(...) || {}`), explicitly parse aggregation properties back into their expected Javascript types (using `parseInt(val || 0, 10)` or `parseFloat(val || 0)`), and double-check schema definitions to use correct raw database column names inside raw Sequelize attributes to ensure safe execution across different backend drivers.
