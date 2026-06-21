@@ -90,7 +90,7 @@ Call.findById = async function(id) {
 };
 
 Call.create = async function(callData) {
-  return Call.create(callData);
+  return Call.build(callData).save();
 };
 
 Call.update = async function(id, updateData) {
@@ -101,20 +101,26 @@ Call.update = async function(id, updateData) {
 };
 
 Call.getStats = async function(userId) {
-  const calls = await Call.findAll({ where: { userId } });
-  const totalCalls = calls.length;
-  const completedCalls = calls.filter(c => c.status === 'completed').length;
-  const failedCalls = calls.filter(c => c.status === 'failed').length;
-  const unansweredCalls = calls.filter(c => c.status === 'busy' || c.status === 'no-answer').length;
-  const durations = calls.filter(c => c.duration).map(c => c.duration);
-  const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+  // Bolt optimization: reduces memory overhead from O(N) to O(1) by using database-level aggregation
+  // instead of fetching all records and filtering/reducing in JavaScript.
+  const stats = await Call.findOne({
+    where: { userId },
+    attributes: [
+      [Call.sequelize.fn('COUNT', Call.sequelize.col('id')), 'totalCalls'],
+      [Call.sequelize.literal("SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END)"), 'completedCalls'],
+      [Call.sequelize.literal("SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END)"), 'failedCalls'],
+      [Call.sequelize.literal("SUM(CASE WHEN status IN ('busy', 'no-answer') THEN 1 ELSE 0 END)"), 'unansweredCalls'],
+      [Call.sequelize.literal("AVG(CASE WHEN duration > 0 THEN duration ELSE NULL END)"), 'avgDuration']
+    ],
+    raw: true
+  }) || {};
   
   return {
-    totalCalls,
-    completedCalls,
-    failedCalls,
-    unansweredCalls,
-    avgDuration
+    totalCalls: parseInt(stats.totalCalls || 0, 10),
+    completedCalls: parseInt(stats.completedCalls || 0, 10),
+    failedCalls: parseInt(stats.failedCalls || 0, 10),
+    unansweredCalls: parseInt(stats.unansweredCalls || 0, 10),
+    avgDuration: parseFloat(stats.avgDuration || 0)
   };
 };
 
