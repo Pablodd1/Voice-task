@@ -92,19 +92,26 @@ Claim.delete = async function(id) {
 };
 
 Claim.getStats = async function(userId) {
-  const claims = await Claim.findAll({ where: { userId } });
-  const totalClaims = claims.length;
-  const paidClaims = claims.filter(c => c.status === 'paid').length;
-  const deniedClaims = claims.filter(c => c.status === 'denied').length;
-  const pendingClaims = claims.filter(c => c.status === 'pending').length;
-  const totalBilledAmount = claims.reduce((sum, c) => sum + parseFloat(c.billedAmount || 0), 0);
+  // Reduces memory overhead from O(N) to O(1) by using database-level aggregation
+  const result = await Claim.findOne({
+    where: { userId },
+    attributes: [
+      [Claim.sequelize.fn('COUNT', Claim.sequelize.col('id')), 'totalClaims'],
+      [Claim.sequelize.fn('SUM', Claim.sequelize.literal("CASE WHEN status = 'paid' THEN 1 ELSE 0 END")), 'paidClaims'],
+      [Claim.sequelize.fn('SUM', Claim.sequelize.literal("CASE WHEN status = 'denied' THEN 1 ELSE 0 END")), 'deniedClaims'],
+      [Claim.sequelize.fn('SUM', Claim.sequelize.literal("CASE WHEN status = 'pending' THEN 1 ELSE 0 END")), 'pendingClaims'],
+      [Claim.sequelize.fn('SUM', Claim.sequelize.col('billed_amount')), 'totalBilledAmount']
+    ],
+    raw: true
+  });
+  const stats = result || {};
   
   return {
-    totalClaims,
-    paidClaims,
-    deniedClaims,
-    pendingClaims,
-    totalBilledAmount
+    totalClaims: parseInt(stats.totalClaims || 0, 10),
+    paidClaims: parseInt(stats.paidClaims || 0, 10),
+    deniedClaims: parseInt(stats.deniedClaims || 0, 10),
+    pendingClaims: parseInt(stats.pendingClaims || 0, 10),
+    totalBilledAmount: parseFloat(stats.totalBilledAmount || 0)
   };
 };
 

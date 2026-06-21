@@ -101,20 +101,26 @@ Call.update = async function(id, updateData) {
 };
 
 Call.getStats = async function(userId) {
-  const calls = await Call.findAll({ where: { userId } });
-  const totalCalls = calls.length;
-  const completedCalls = calls.filter(c => c.status === 'completed').length;
-  const failedCalls = calls.filter(c => c.status === 'failed').length;
-  const unansweredCalls = calls.filter(c => c.status === 'busy' || c.status === 'no-answer').length;
-  const durations = calls.filter(c => c.duration).map(c => c.duration);
-  const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+  // Reduces memory overhead from O(N) to O(1) by using database-level aggregation
+  const result = await Call.findOne({
+    where: { userId },
+    attributes: [
+      [Call.sequelize.fn('COUNT', Call.sequelize.col('id')), 'totalCalls'],
+      [Call.sequelize.fn('SUM', Call.sequelize.literal("CASE WHEN status = 'completed' THEN 1 ELSE 0 END")), 'completedCalls'],
+      [Call.sequelize.fn('SUM', Call.sequelize.literal("CASE WHEN status = 'failed' THEN 1 ELSE 0 END")), 'failedCalls'],
+      [Call.sequelize.fn('SUM', Call.sequelize.literal("CASE WHEN status IN ('busy', 'no-answer') THEN 1 ELSE 0 END")), 'unansweredCalls'],
+      [Call.sequelize.fn('AVG', Call.sequelize.literal("CASE WHEN duration > 0 THEN duration ELSE NULL END")), 'avgDuration']
+    ],
+    raw: true
+  });
+  const stats = result || {};
   
   return {
-    totalCalls,
-    completedCalls,
-    failedCalls,
-    unansweredCalls,
-    avgDuration
+    totalCalls: parseInt(stats.totalCalls || 0, 10),
+    completedCalls: parseInt(stats.completedCalls || 0, 10),
+    failedCalls: parseInt(stats.failedCalls || 0, 10),
+    unansweredCalls: parseInt(stats.unansweredCalls || 0, 10),
+    avgDuration: parseFloat(stats.avgDuration || 0)
   };
 };
 
